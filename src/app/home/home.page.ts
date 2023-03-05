@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { AlertController } from '@ionic/angular';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
@@ -16,8 +18,36 @@ export class HomePage {
   encodedData!: '';
   encodeData: any;
   inputData: any;
+  clickSub: any;
 
-  constructor(private barcodeScanner: BarcodeScanner) { }
+  constructor(public alertController: AlertController, private localNotifications: LocalNotifications, private barcodeScanner: BarcodeScanner) { }
+
+  async presentAlert(data: any) {
+    const alert = await this.alertController.create({
+      header: 'Alert',
+      message: data,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  unsub() {
+    this.clickSub.unsubscribe();
+  }
+
+  simpleNotif(data: any) {
+    // this.clickSub = this.localNotifications.on('click').subscribe(data => {
+      console.log(data);
+      this.presentAlert('Your notifiations contains a secret = ' + data);
+      this.unsub();
+    // });
+    this.localNotifications.schedule({
+      id: 1,
+      text: 'Single Local Notification',
+      data: data
+    });
+
+  }
 
   scanBarcode() {
     const options: BarcodeScannerOptions = {
@@ -36,7 +66,7 @@ export class HomePage {
       this.scannedData = barcodeData;
 
       alert('Success ' + JSON.stringify(barcodeData.text));
-
+      this.simpleNotif(JSON.stringify(barcodeData.text))
     }).catch(err => {
       console.log('Error', err);
     });
