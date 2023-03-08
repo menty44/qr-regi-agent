@@ -12,10 +12,12 @@ import Swal from 'sweetalert2';
 })
 export class HomePage {
 
+
   scannedData: any;
   encodedData!: '';
   encodeData: any;
   inputData: any;
+  code: any;
 
   constructor(private barcodeScanner: BarcodeScanner) { }
 
@@ -49,6 +51,10 @@ export class HomePage {
     }, (err) => {
       console.log('Error occured : ' + err);
     });
+  }
+
+  verify() {
+    alert(this.code);
   }
 
 }

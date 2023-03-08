@@ -19,7 +19,6 @@ export class LoginComponent  implements OnInit {
 
   login() {
     let self = this;
-    // alert(`Login `+ this.email + ` ` + this.password);
     var data = JSON.stringify({
       email: this.email,
       password: this.password
@@ -28,7 +27,7 @@ export class LoginComponent  implements OnInit {
     var config = {
       method: 'post',
     maxBodyLength: Infinity,
-      url: 'http://localhost:3000/api/v1/auth/users/login',
+      url: 'https://backend.qr-regi.com/api/v1/auth/users/login',
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -37,11 +36,10 @@ export class LoginComponent  implements OnInit {
 
     axios(config)
     .then(function (response: { data: any; }) {
-      // console.log(JSON.stringify(response.data));
       console.log(JSON.stringify(response.data.status));
       if (response.data.status == 'success') {
         alert('Login Successful');
-        // self.router.navigate(['/home']);
+        localStorage.setItem('user', JSON.stringify(response.data.data));
         self.router.navigateByUrl('/home');
       }
     })
