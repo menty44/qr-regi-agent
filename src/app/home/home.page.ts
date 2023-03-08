@@ -21,6 +21,15 @@ export class HomePage {
 
   constructor(private barcodeScanner: BarcodeScanner) { }
 
+  public mail: string = "";
+
+  ngOnInit() {
+    let user = localStorage.getItem('user');
+    let parsed = (user !== null) ? JSON.parse(user) : "";
+    console.log(parsed.users.email);
+    this.mail = parsed.users.email;
+  }
+
   scanBarcode() {
     const options: BarcodeScannerOptions = {
       preferFrontCamera: false,
@@ -54,7 +63,7 @@ export class HomePage {
   }
 
   verify() {
-    alert(this.code);
+    alert(this.mail);
   }
 
 }
