@@ -18,6 +18,11 @@ export class HomePage {
   encodeData: any;
   inputData: any;
   code: any;
+  user: any;
+  firstname: any;
+  lastname: any;
+  email: any;
+  phone: any;
 
   constructor(private barcodeScanner: BarcodeScanner) { }
 
@@ -26,8 +31,13 @@ export class HomePage {
   ngOnInit() {
     let user = localStorage.getItem('user');
     let parsed = (user !== null) ? JSON.parse(user) : "";
+    this.user = parsed.users;
     console.log(parsed.users.email);
     this.mail = parsed.users.email;
+    this.firstname = parsed.users.first_name;
+    this.lastname = parsed.users.last_name;
+    this.phone = parsed.users.phone;
+    // this.firstname = parsed.users.first_name;
   }
 
   scanBarcode() {
@@ -63,7 +73,7 @@ export class HomePage {
   }
 
   verify() {
-    alert(this.mail);
+    alert(this.mail + ' ' + this.code);
   }
 
 }

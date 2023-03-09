@@ -41,6 +41,8 @@ export class LoginComponent  implements OnInit {
         alert('Login Successful');
         localStorage.setItem('user', JSON.stringify(response.data.data));
         self.router.navigateByUrl('/home');
+      }else{
+        alert("Wrong Credentials")
       }
     })
     .catch(function (error: any) {
