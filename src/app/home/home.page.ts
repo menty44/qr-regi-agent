@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner/ngx';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-import { AlertController } from '@ionic/angular';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
@@ -14,39 +12,32 @@ import Swal from 'sweetalert2';
 })
 export class HomePage {
 
+
   scannedData: any;
   encodedData!: '';
   encodeData: any;
   inputData: any;
-  clickSub: any;
+  code: any;
+  user: any;
+  firstname: any;
+  lastname: any;
+  email: any;
+  phone: any;
 
-  constructor(public alertController: AlertController, private localNotifications: LocalNotifications, private barcodeScanner: BarcodeScanner) { }
+  constructor(private barcodeScanner: BarcodeScanner) { }
 
-  async presentAlert(data: any) {
-    const alert = await this.alertController.create({
-      header: 'Alert',
-      message: data,
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
+  public mail: string = "";
 
-  unsub() {
-    this.clickSub.unsubscribe();
-  }
-
-  simpleNotif(data: any) {
-    // this.clickSub = this.localNotifications.on('click').subscribe(data => {
-      console.log(data);
-      this.presentAlert('Your notifiations contains a secret = ' + data);
-      this.unsub();
-    // });
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Single Local Notification',
-      data: data
-    });
-
+  ngOnInit() {
+    let user = localStorage.getItem('user');
+    let parsed = (user !== null) ? JSON.parse(user) : "";
+    this.user = parsed.users;
+    console.log(parsed.users.email);
+    this.mail = parsed.users.email;
+    this.firstname = parsed.users.first_name;
+    this.lastname = parsed.users.last_name;
+    this.phone = parsed.users.phone;
+    // this.firstname = parsed.users.first_name;
   }
 
   scanBarcode() {
@@ -66,7 +57,7 @@ export class HomePage {
       this.scannedData = barcodeData;
 
       alert('Success ' + JSON.stringify(barcodeData.text));
-      this.simpleNotif(JSON.stringify(barcodeData.text))
+
     }).catch(err => {
       console.log('Error', err);
     });
@@ -79,6 +70,10 @@ export class HomePage {
     }, (err) => {
       console.log('Error occured : ' + err);
     });
+  }
+
+  verify() {
+    alert(this.mail + ' ' + this.code);
   }
 
 }
