@@ -4,7 +4,9 @@ import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-sca
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
-
+// var axios = require('axios');
+import axios from 'axios';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -23,6 +25,7 @@ export class HomePage {
   lastname: any;
   email: any;
   phone: any;
+  village: any;
 
   constructor(private barcodeScanner: BarcodeScanner) { }
 
@@ -37,7 +40,7 @@ export class HomePage {
     this.firstname = parsed.users.first_name;
     this.lastname = parsed.users.last_name;
     this.phone = parsed.users.phone;
-    // this.firstname = parsed.users.first_name;
+    this.village = parsed.users.village;
   }
 
   scanBarcode() {
@@ -73,7 +76,40 @@ export class HomePage {
   }
 
   verify() {
-    alert(this.mail + ' ' + this.code);
+    const self = this;
+    // alert(this.mail + ' ' + this.code);
+    // var axios = require('axios');
+    var data = JSON.stringify({
+      agent: this.mail,
+      code: this.code,
+      village: this.village,
+      event_id: "63e9528998456a2cf06ec685"
+    });
+
+    var config = {
+      method: 'post',
+    maxBodyLength: Infinity,
+      url: 'https://backend.qr-regi.com/api/v1/dash/clients/scan',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+};
+
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data.data));
+  if(response.data.data.clients.code === self.code){
+    alert('Scan Success')
+  }else{
+    alert('Scan error')
+  }
+})
+.catch(function (error) {
+  console.log(error);
+  alert('A Server Error occured')
+});
+
   }
 
 }
