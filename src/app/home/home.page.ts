@@ -59,7 +59,40 @@ export class HomePage {
       console.log('Barcode data', barcodeData);
       this.scannedData = barcodeData;
 
-      alert('Success ' + JSON.stringify(barcodeData.text));
+      // alert('Success ' + JSON.stringify(barcodeData.text));
+      const self = this;
+      // alert(this.mail + ' ' + this.code);
+      // var axios = require('axios');
+      var data = JSON.stringify({
+        agent: this.mail,
+        code: barcodeData.text,
+        village: this.village,
+        event_id: "63e9528998456a2cf06ec685"
+      });
+  
+      var config = {
+        method: 'post',
+      maxBodyLength: Infinity,
+        url: 'https://backend.qr-regi.com/api/v1/dash/clients/scan',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+  };
+  
+  axios(config)
+  .then(function (response) {
+    console.log(JSON.stringify(response.data.data));
+    if(response.data.data.clients.code === barcodeData.text){
+      alert('Scan Success')
+    }else{
+      alert('Scan error')
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+    alert('A Server Error occured')
+  });
 
     }).catch(err => {
       console.log('Error', err);
